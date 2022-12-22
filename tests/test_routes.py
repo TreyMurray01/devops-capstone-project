@@ -174,3 +174,35 @@ class TestAccountService(TestCase):
         )
         self.assertEquals(status.HTTP_200_OK,get_all_response.status_code)
         self.assertEquals(0,len(get_all_response.get_json()))
+
+    def test_update_account(self):
+
+        account = AccountFactory()
+        response = self.client.post(
+            BASE_URL,
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEquals(status.HTTP_201_CREATED,response.status_code)
+
+        new_account = response.get_json()
+        account.id = new_account["id"]
+        
+        update_response = self.client.put(
+            BASE_URL+f"/update/{account.id}",
+            json=new_account
+        )
+
+        self.assertEquals(status.HTTP_200_OK,update_response.status_code)
+        updated_account = update_response.get_json()
+        self.assertEquals(updated_account["name"],new_account["name"])
+
+    def test_failed_update(self):
+               
+        update_response = self.client.put(
+            BASE_URL+f"/update/0"
+        )
+
+        self.assertEquals(status.HTTP_404_NOT_FOUND,update_response.status_code)
+
+
