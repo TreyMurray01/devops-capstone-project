@@ -145,8 +145,32 @@ class TestAccountService(TestCase):
         self.assertEquals(account.name,data["name"])
 
     def test_account_not_found(self):
-        account = AccountFactory()
         read_response= self.client.get(
             f"/accounts/{0}"
         )
         self.assertEqual(status.HTTP_404_NOT_FOUND,read_response.status_code)
+
+    def test_get_all_accounts(self):
+        accounts = []
+        for i in range(1,5):
+            account = AccountFactory()
+            response = self.client.post(
+                BASE_URL,
+                json=account.serialize(),
+                content_type="application/json"
+            )
+            accounts.append(response.get_json())
+        
+        get_all_response = self.client.get(
+            BASE_URL+"/list"
+        )
+        self.assertEquals(status.HTTP_200_OK,get_all_response.status_code)
+        self.assertEquals(len(accounts),len(get_all_response.get_json()))
+
+    def test_accounts_not_found(self):
+        
+        get_all_response = self.client.get(
+            BASE_URL+"/list"
+        )
+        self.assertEquals(status.HTTP_200_OK,get_all_response.status_code)
+        self.assertEquals(0,len(get_all_response.get_json()))
