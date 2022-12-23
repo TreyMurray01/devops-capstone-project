@@ -140,19 +140,19 @@ class TestAccountService(TestCase):
             content_type="application/json"
         )
 
-        self.assertEquals(status.HTTP_200_OK,read_response.status_code)
+        self.assertEquals(status.HTTP_200_OK, read_response.status_code)
         data = read_response.get_json()
-        self.assertEquals(account.name,data["name"])
+        self.assertEquals(account.name, data["name"])
 
     def test_account_not_found(self):
-        read_response= self.client.get(
+        read_response = self.client.get(
             f"/{BASE_URL}/{0}"
         )
-        self.assertEqual(status.HTTP_404_NOT_FOUND,read_response.status_code)
+        self.assertEqual(status.HTTP_404_NOT_FOUND, read_response.status_code)
 
     def test_get_all_accounts(self):
         accounts = []
-        for i in range(1,5):
+        for i in range(1, 5):
             account = AccountFactory()
             response = self.client.post(
                 BASE_URL,
@@ -160,20 +160,18 @@ class TestAccountService(TestCase):
                 content_type="application/json"
             )
             accounts.append(response.get_json())
-        
         get_all_response = self.client.get(
             BASE_URL
         )
-        self.assertEquals(status.HTTP_200_OK,get_all_response.status_code)
-        self.assertEquals(len(accounts),len(get_all_response.get_json()))
+        self.assertEquals(status.HTTP_200_OK, get_all_response.status_code)
+        self.assertEquals(len(accounts), len(get_all_response.get_json()))
 
     def test_accounts_not_found(self):
-        
         get_all_response = self.client.get(
             BASE_URL
         )
-        self.assertEquals(status.HTTP_200_OK,get_all_response.status_code)
-        self.assertEquals(0,len(get_all_response.get_json()))
+        self.assertEquals(status.HTTP_200_OK, get_all_response.status_code)
+        self.assertEquals(0, len(get_all_response.get_json()))
 
     def test_update_account(self):
 
@@ -183,27 +181,25 @@ class TestAccountService(TestCase):
             json=account.serialize(),
             content_type="application/json"
         )
-        self.assertEquals(status.HTTP_201_CREATED,response.status_code)
+        self.assertEquals(status.HTTP_201_CREATED, response.status_code)
 
         new_account = response.get_json()
         account.id = new_account["id"]
-        
         update_response = self.client.put(
             f"{BASE_URL}/{account.id}",
             json=new_account
         )
 
-        self.assertEquals(status.HTTP_200_OK,update_response.status_code)
+        self.assertEquals(status.HTTP_200_OK, update_response.status_code)
         updated_account = update_response.get_json()
-        self.assertEquals(updated_account["name"],new_account["name"])
+        self.assertEquals(updated_account["name"], new_account["name"])
 
     def test_failed_update(self):
-               
         update_response = self.client.put(
             f"{BASE_URL}/{0}"
         )
 
-        self.assertEquals(status.HTTP_404_NOT_FOUND,update_response.status_code)
+        self.assertEquals(status.HTTP_404_NOT_FOUND, update_response.status_code)
 
     def test_delete_account(self):
 
@@ -211,21 +207,18 @@ class TestAccountService(TestCase):
 
         response = self.client.post(
             BASE_URL,
-            json= account.serialize(),
+            json=account.serialize(),
             content_type="application/json"
         )
-        self.assertEquals(status.HTTP_201_CREATED,response.status_code)
+        self.assertEquals(status.HTTP_201_CREATED, response.status_code)
         account.id = response.get_json()["id"]
         delete_response = self.client.delete(
             f"{BASE_URL}/{account.id}"
         )
-        self.assertEquals(status.HTTP_204_NO_CONTENT,delete_response.status_code)
+        self.assertEquals(status.HTTP_204_NO_CONTENT, delete_response.status_code)
+
     def test_method_not_allowed(self):
         response = self.client.delete(
             BASE_URL
             )
-        self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED,response.status_code)
-
-
-
-
+        self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
