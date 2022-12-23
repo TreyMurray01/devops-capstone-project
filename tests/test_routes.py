@@ -20,7 +20,7 @@ DATABASE_URI = os.getenv(
 
 BASE_URL = "/accounts"
 HTTPS_ENVIRON = {
-    'wsgi.url_scheme':'https'
+    'wsgi.url_scheme': 'https'
 }
 
 
@@ -247,11 +247,10 @@ class TestAccountService(TestCase):
         for key, value in headers.items():
             self.assertEqual(response.headers.get(key), value)
 
-    def test_access_control_allow(self):        
+    def test_access_control_allow(self):
         response = self.client.get(
             "/",
             environ_overrides=HTTPS_ENVIRON
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
-        
