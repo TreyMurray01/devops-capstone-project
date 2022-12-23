@@ -6,7 +6,7 @@ metadata:
     app: accounts
   name: accounts
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: accounts
@@ -18,7 +18,7 @@ spec:
         app: accounts
     spec:
       containers:
-      - image: us.icr.io/sn-labs-treymurray13/accounts:1
+      - image: IMAGE_NAME_HERE
         name: accounts
         resources: {}
       
